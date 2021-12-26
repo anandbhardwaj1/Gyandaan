@@ -9,6 +9,7 @@ import {useNavigate,Navigate} from "react-router-dom"
     const initialValues = { email: "", password: "" };
     const [formValues, setFormValues] = useState(initialValues);
     const [Error,setError]=useState("")
+    const [isSubmit, setIsSubmit] = useState(false);
     
    
     const handleChange = (e) => {
@@ -17,13 +18,40 @@ import {useNavigate,Navigate} from "react-router-dom"
       setFormValues({ ...formValues, [name]: value });
     
     };
-  
+   useEffect(()=>{
+       
+        async function fetchMyAPI() {
+            let response = await  fetch("http://localhost:8800/login", {
+                method: 'POST',
+                body: JSON.stringify(formValues),
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+            if(response.ok)
+            {
+                alert("Logged in");
+            }
+            else
+            { console.log("error");
+                setError("Invalid Credentials");
+            }
+            response = await response.json()
+            console.log(response);
+            
+          }
+           if(isSubmit)
+          fetchMyAPI()
+
+       
+   },[isSubmit]);
    
  
     const  handleSubmit = (e) => {
         e.preventDefault();
         console.log(formValues);
-    setFormValues(initialValues); 
+       setIsSubmit(true);
+   
       };
         return (
           

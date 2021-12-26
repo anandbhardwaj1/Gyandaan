@@ -1,21 +1,12 @@
 const mongoose=require("mongoose");
 
 const studentSchema=new mongoose.Schema({
-    username:{
-        type:String,
-        required:true,
-        unique:true
-    },
-    firstname:
-    {
-        type:String,
-        required:true,
-
-    },
-    surname:{
+    name:{
         type:String,
         required:true
     },
+   
+   
     email:{
         type:String,
         required:true,
@@ -25,22 +16,14 @@ const studentSchema=new mongoose.Schema({
         type:String,
         required:true
     },
-    profilePicture:{
-        type:String,
-        default:""
-    },
-    days:{
-        type:Array,
-        default:[]
-    },
-    timing:{
-        type:Array,
-        default:[]
-    },
-    topics:{
-        type:Array,
-        default:[]
-    },
+    age:{
+        type:Number,
+        required:true
+    }
+   
+   
+   
+    
 },
 {timestamps:true}
 );
