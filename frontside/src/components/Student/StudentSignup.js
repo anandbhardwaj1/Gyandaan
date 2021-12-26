@@ -13,7 +13,39 @@ function StudentSignup ()
     const navigate=useNavigate();
 
    
+    useEffect(()=>{
+      if(isSubmit&&Object.keys(formErrors).length === 0)
+      {
+        console.log(formValues);
+        fetch("http://localhost:8800/register", {
+        method: 'POST',
+        body: JSON.stringify(formValues),
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    })
+    .then((res) => {
+      if(res.ok)
+      {
+          navigate('/StudentLogin');
+      }
+      else
+      { 
+        if(res.status===401)
+        setError("Email Already Registered!")
+        else if(res.status===422)
+        setError("All fields are required!");
+        else
+        setError("Try Again");
+      }
+      return res.json()
+  })
+    .then(data => console.log(data)); 
 
+     setFormValues(initialValues);
+     setError("");
+      }
+    },[formErrors]);
   
    
     const handleChange = (e) => {
