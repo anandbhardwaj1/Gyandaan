@@ -4,7 +4,7 @@ import "./Student.css"
 
 function StudentSignup ()
     {
-     const initialValues = { name:"", email: "", password: "",confirmpassword:"",age:""   };
+     const initialValues = { name:"", email: "", password: "",confirmpassword:"",age:"",phone:""   };
     const [formValues, setFormValues] = useState(initialValues);
     const [formErrors, setFormErrors] = useState({});
     const [isSubmit, setIsSubmit] = useState(false);
@@ -125,6 +125,11 @@ function StudentSignup ()
                 <div className="form-group">
                     
                     <input type="age" className="form-control" placeholder="Enter Your Age"  name="age" value={formValues.age}
+                    onChange={handleChange} />
+                </div>     
+                <div className="form-group">
+                    
+                    <input type="phone" className="form-control" placeholder="Enter Your Phone"  name="phone" value={formValues.phone}
                     onChange={handleChange} />
                 </div>     
                 <div className="form-group">
