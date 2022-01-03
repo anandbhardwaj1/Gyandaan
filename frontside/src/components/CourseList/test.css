@@ -1,0 +1,12 @@
+body{
+    color: #69697b;
+    font-size: 18px;
+    line-height: 1.667em;
+    font-weight: 400;
+    margin: 0;
+    padding-top: 0;
+}
+#scholastic-courses, #creatistic-courses, #hobbistic-courses{
+    margin: 40px 60px;
+    padding: 20px 40px;
+  }

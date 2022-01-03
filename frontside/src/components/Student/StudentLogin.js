@@ -1,10 +1,9 @@
 import React,{useState,useContext,useEffect} from "react";
 import {useNavigate,Navigate} from "react-router-dom"
-
+import {useUserContext} from "../../context/userContext"
  function StudentLogin()
-   {   
-      
-      
+   {    const { user,setUser,loading,setloading } = useUserContext();
+    
     const navigate=useNavigate();
     const initialValues = { email: "", password: "" };
     const [formValues, setFormValues] = useState(initialValues);
@@ -18,22 +17,49 @@ import {useNavigate,Navigate} from "react-router-dom"
       setFormValues({ ...formValues, [name]: value });
     
     };
+   
+    async function fetchMyAPI2() {
+        let response = await  fetch("http://localhost:8800/studentprofile",{
+            credentials: 'include'
+        });
+        if(response.ok)
+        {  response = await response.json()
+           console.log(response);
+            setUser(response);
+           
+        }
+        else
+        {setUser({});
+          
+      }
+    }
+    
    useEffect(()=>{
        
         async function fetchMyAPI() {
+            console.log("ff");
             let response = await  fetch("http://localhost:8800/login", {
                 method: 'POST',
                 body: JSON.stringify(formValues),
+                
+                credentials: 'include', 
                 headers: {
                     'Content-Type': 'application/json'
                 },
             })
             if(response.ok)
-            {
-                alert("Logged in");
+            { 
+
+               console.log("login");
+              
+            await fetchMyAPI2();
+              setIsSubmit(false);
+              setloading(true);
+                navigate("/StudentProfile");
             }
             else
             { console.log("error");
+              setIsSubmit(false);
                 setError("Invalid Credentials");
             }
             response = await response.json()
@@ -41,7 +67,9 @@ import {useNavigate,Navigate} from "react-router-dom"
             
           }
            if(isSubmit)
-          fetchMyAPI()
+          { console.log("submit");
+              fetchMyAPI()
+          }
 
        
    },[isSubmit]);
@@ -53,10 +81,8 @@ import {useNavigate,Navigate} from "react-router-dom"
        setIsSubmit(true);
    
       };
-        return (
-          
-
-            <form className="form-group">
+   return (
+        <form className="form-group">
 
                 <h3 className="form-group">Log in </h3>
                 {{Error} ? (
