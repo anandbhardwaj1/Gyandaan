@@ -25,7 +25,7 @@ app.use(morgan("common"));
 
 app.use(require("./routes/auth"));
 app.use(require("./routes/course"));
-
+app.use(require("./routes/mentor"));
 
 
 mongoose.connect(URL, {useNewUrlParser: true},()=>{
