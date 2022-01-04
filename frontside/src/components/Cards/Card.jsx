@@ -23,8 +23,8 @@ export default function Cards({posts}) {
                         <div className="card-body">
                         <h4 className="card-title">{p.name}</h4>
                         <p className="card-text">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellendus, corporis nesciunt exercitationem ea iste, dolorum adipisci necessitatibus, explicabo ipsam est veniam voluptate odio quo accusantium error commodi sequi quia vel!</p>
-                        <Link to={`/mentor?cat=${p.name}`} className="btn btn-primary">REGISTER</Link>
-                        <a href="/" className="btn btn-outline">SYLLABUS</a>
+                        <Link to={`/mentor?cat=${p.name}`} className="btn btn-primary">Message</Link>
+                        <a href="/" className="btn btn-outline">Details</a>
                         </div>
                     </div>
                     </div>

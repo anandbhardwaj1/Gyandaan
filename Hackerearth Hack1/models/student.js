@@ -23,6 +23,9 @@ const studentSchema=new mongoose.Schema({
     phone:{
         type:Number,
         default:9111111111
+    },
+    topics:{
+        type:Array
     }
    
    

@@ -11,7 +11,7 @@ function StudentSignup ()
 
     const [Error,setError]=useState("");
     const navigate=useNavigate();
-
+    
    
     useEffect(()=>{
       if(isSubmit&&Object.keys(formErrors).length === 0)

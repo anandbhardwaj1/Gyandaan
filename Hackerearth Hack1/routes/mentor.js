@@ -1,11 +1,11 @@
 const router=require("express").Router();
-const Course=require("../models/courses");
+const Mentor=require("../models/mentor");
 const bodyParser=require("body-parser")
 const cookieParser=require("cookie-parser");
 router.use(cookieParser());
 router.use(bodyParser.json());
 
-router.post("/addcourse",async (req,res)=>{
+router.post("/addMentor",async (req,res)=>{
     try{
         const newCourse=await new Course({
             name:req.body.name
@@ -19,10 +19,10 @@ router.post("/addcourse",async (req,res)=>{
     } 
     });
 
-    router.post("/courses",async(req,res)=>{
+    router.post("/mentors",async(req,res)=>{
         try{ console.log("k");
            const topic=req.body.topic;
-            Course.find({topics:topic}, function(err, data) {
+            Mentor.find({topics:topic}, function(err, data) {
                 if (err) {
                   console.log(err);
                   return res.send(500, 'Something Went wrong with Retrieving data');
@@ -34,7 +34,7 @@ router.post("/addcourse",async (req,res)=>{
         }
         catch(err)
         {   console.log("k1");
-           res.status(404).json(err);
+           res.status(405).json(err);
         }
     });
     
