@@ -13,13 +13,19 @@ export default function Messenger() {
   const [conversations,setConversations]=useState([])
   const {user}=useUserContext();
   const { id } = useParams();
+  const [friend_id,setFriend_id]=useState("");
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [receiver,setReceiver]=useState("");
   const [flag,setFlag]=useState(false);
+  const [receiver2,setReceiver2]=useState("");
+  const [search,setSearch]=useState("");
+  const [filterData,setfilterData]=useState([]);
+  const [mapFriend,setMapFriend]=useState([]);
   const socket = useRef();
+  const [f_id,setF_id]=useState("");
 
   const scrollRef = useRef();
   
@@ -27,6 +33,72 @@ export default function Messenger() {
  
  
 
+
+  const handleChange =async()=>
+{
+   setSearch(inputRef.current.value);
+  
+}
+const searchFilter=()=>{
+  
+  if (search !== "") {
+   
+    const newList = mapFriend.filter((contact) => {
+      return contact.data.toLowerCase().includes(search.toLowerCase());
+    });
+   if(newList)
+   { 
+     setfilterData(newList);
+   }
+   else
+   setfilterData(mapFriend);
+  }
+  else
+ {
+    setfilterData(mapFriend);
+ }
+
+}
+
+const getFriendId=(conversation_id)=>{
+    try{
+     const conversation= axios.get("http://localhost:8800/conv/"+conversation_id);
+     return conversation.data;
+    }
+    catch(err)
+    {
+      console.log(err);
+    }
+}
+
+const getUser = async (friendId,ConversationId) => {
+  
+  try { 
+    const res = await axios("http://localhost:8800/students/" + friendId);
+    const data=res.data;
+   setMapFriend((prev)=>[...prev,{friendId,data,ConversationId}]);
+  } catch (err) {
+    const data="mentor2"
+    setMapFriend((prev)=>[...prev,{friendId,data,ConversationId}]);
+   
+  }
+};
+
+useEffect(()=>{
+  const fun =async()=> {
+    
+  
+  try{
+    const conversation= await axios.get("http://localhost:8800/conv/"+currentChat);
+      setF_id(conversation.data);
+   }
+   catch(err)
+   { setF_id("");
+     console.log(err);
+   }
+  }
+  fun();
+},[currentChat])
 
   useEffect(() => {
     socket.current = io("ws://localhost:8900");
@@ -41,24 +113,39 @@ export default function Messenger() {
   }, []);
 
   useEffect(() => {
-    arrivalMessage &&
+    if(currentChat?.members)
+   { arrivalMessage &&
       currentChat?.members.includes(arrivalMessage.sender) &&
-      setMessages((prev) => [...prev, arrivalMessage]);
+      setMessages((prev) => [...prev, arrivalMessage]);}
+      else
+      {
+        arrivalMessage &&
+        f_id?.members.includes(arrivalMessage.sender) &&
+        setMessages((prev) => [...prev, arrivalMessage]);
+      }
   }, [arrivalMessage, currentChat]);
 
-  useEffect(() => {
-    
+  useEffect( () => {
+   
+    const ID=f_id?.members?.find((m)=>m!==user._id);
+    console.log(ID);
+
     socket.current.emit("addUser", user._id);
     socket.current.on("getUsers",(data)=>{
-      const k=data.find((user) => user.userId === id);
+      
+     
+      
+      const k=data.find((user) => user.userId === (ID?ID:id));
+    
       if(!k)
       setFlag(false);
       else
       setFlag(true);
     })
-  }, [user]);
+  }, [currentChat,f_id]);
 
   useEffect(() => {
+    
     const getConversations = async () => {
       try {
         const res = await axios.get("http://localhost:8800/conversations/" + user._id);
@@ -68,6 +155,8 @@ export default function Messenger() {
       }
     };
     getConversations();
+    
+
   }, [user._id]);
  
   useEffect(() => {
@@ -86,13 +175,26 @@ export default function Messenger() {
   }, []);
 
   useEffect(() => {
+    
     const getMessages = async () => {
-      try {
+      if(!receiver2)
+      try { 
+       
         const res = await axios.get("http://localhost:8800/messages/" + currentChat?._id);
         setMessages(res.data);
       } catch (err) {
         console.log(err);
       }
+      else
+      {
+        try {
+          const res = await axios.get("http://localhost:8800/messages/" + currentChat);
+          setMessages(res.data);
+        } catch (err) {
+          console.log(err);
+        }
+      }
+     
     };
     getMessages();
   }, [currentChat]);
@@ -102,15 +204,17 @@ export default function Messenger() {
     const message = {
       sender: user._id,
       text: (newMessage),
-      conversationId: currentChat._id,
+      conversationId: currentChat._id?currentChat._id:currentChat,
     };
+    const ID=f_id?.members?.find((m)=>m!==user._id);
     if(flag)
     socket.current.emit("sendMessage", {
       senderId: user._id,
-      receiverId: id,
+      receiverId: ID?ID:id,
       text: (newMessage),
     });
     try {
+     
       const res = await axios.post("http://localhost:8800/messages", message);
       setMessages([...messages, res.data]);
       setNewMessage("");
@@ -124,9 +228,11 @@ export default function Messenger() {
   }, [messages]);
 
   useEffect(()=>{
-    const friendId =currentChat?.members.find((m) => m !== user._id);
-    if(friendId)
-    {  const getUser = async () => {
+  if(!receiver2)
+  {
+   
+   const  friendId=currentChat?.members.find((m)=>m!==user._id);
+   const getUser = async () => {
       try { 
         const res = await axios("http://localhost:8800/students/" + friendId);
         setReceiver(res.data);
@@ -136,24 +242,46 @@ export default function Messenger() {
       }
     };
     getUser();
-     
-    }
+  }
+    
 
   },[currentChat])
   
- 
+  useEffect(()=>{
+    for(let i=0;i<conversations.length;i++)
+    { //console.log("h");
+      let friendId=conversations[i].members.find((m) => m !== user._id);
+      
+      getUser(friendId,conversations[i]._id);
+
+    }
+
+  },[conversations])
+
+
 if(messages.length!==0)
   return (
     <>
     <div  className="messenger">
     <div className="chatMenu">
       <div className="chatMenuWrapper" >
-        <input placeholder="Search for contacts" className="chatMenuInput" />
-        {conversations.map((c) => (
-          <div onClick={() => setCurrentChat(c)} >
-            <Conversation conversation={c} currentUser={user} />
-          </div>
-        ))}
+        <input placeholder="Search for contacts" className="chatMenuInput" ref={inputRef} onChange={handleChange} />
+        <button className="chatSubmitButton" onClick={searchFilter}>
+                Search
+              </button>
+
+              {!filterData.length? mapFriend.map((c) => (
+            <div onClick={() => {setReceiver2(c.data) ;setCurrentChat(c.ConversationId)}}>
+              <Conversation conversation={c} currentUser={user} />
+            </div>
+          )):
+          filterData.map((c) => (
+            <div onClick={() => {setReceiver2(c.data) ;setCurrentChat(c.ConversationId)}}>
+              <Conversation conversation={c} currentUser={user} />
+            </div>
+          ))
+
+          }
       </div>
     </div>
    
@@ -163,7 +291,7 @@ if(messages.length!==0)
         {currentChat ? (
           <>
             <div className="chatBoxTop">
-            <div className="receiverName">{receiver}</div>
+            <div className="receiverName">{receiver2?receiver2:receiver}</div>
               {
                 messages.map((m) => (
                 <div ref={scrollRef}>
@@ -206,11 +334,18 @@ if(messages.length!==0)
       <div className="chatMenu">
         <div className="chatMenuWrapper">
           <input placeholder="Search for friends" className="chatMenuInput" />
-          {conversations.map((c) => (
-            <div onClick={() => setCurrentChat(c)}>
+          {!filterData.length? mapFriend.map((c) => (
+            <div onClick={() => {setReceiver2(c.data) ;setCurrentChat(c.ConversationId)}}>
               <Conversation conversation={c} currentUser={user} />
             </div>
-          ))}
+          )):
+          filterData.map((c) => (
+            <div onClick={() => {setReceiver2(c.data) ;setCurrentChat(c.ConversationId)}}>
+              <Conversation conversation={c} currentUser={user} />
+            </div>
+          ))
+
+          }
         </div>
       </div>
       <div className="chatBox">
@@ -220,7 +355,7 @@ if(messages.length!==0)
               <div className="chatBoxTop">
                
               <span className="noConversationText">
-             Start a conversation with mentor1.
+             Start a conversation with {receiver2}.
             </span>
               </div>
               <div className="chatBoxBottom">
