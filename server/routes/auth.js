@@ -78,7 +78,7 @@ router.post('/login',async (req,res)=>{
                 const email=others.email;
         const token=jwt.sign({email},process.env.ACCESS_TOKEN_SECRET);
 
-        res.cookie('token', token, {expires: new Date(Date.now() + 1000000),httpOnly:true});
+        res.cookie('token', token, {expires: new Date(Date.now() + 100000000),httpOnly:true});
 
         res.status(200).json({token:token,data:others});
     }
