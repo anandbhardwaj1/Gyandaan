@@ -5,6 +5,7 @@ const dotenv=require("dotenv");
 const helmet=require("helmet");
 const morgan=require("morgan");
 const cookieParser = require("cookie-parser");
+const bodyParser = require('body-parser')
 const studentRoute=require("./routes/student");
 const bcrypt=require("bcrypt");
 const URL="mongodb+srv://Anand:12345678A@cluster0.zgvw0.mongodb.net/Authentication?retryWrites=true&w=majority"
@@ -17,6 +18,7 @@ const corsConfig = {
 };
 app.use(cors(corsConfig));
 
+app.use(bodyParser.json());
 app.use(cookieParser());
 
 app.use(express.json());
@@ -29,6 +31,7 @@ app.use(require("./routes/mentor"));
 app.use(require("./routes/conversations"));
 app.use(require("./routes/messages"));
 app.use(require("./routes/student"));
+app.use(require("./routes/razorpay"));
 
 mongoose.connect(URL, {useNewUrlParser: true},()=>{
     console.log("Connected");

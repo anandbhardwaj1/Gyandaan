@@ -2,12 +2,12 @@
   "name": "hackerearth-hack1",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "devStart": "nodemon index.js",
+    "devStart": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "lakshya",
+  "author": "Anand",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.0.1",
@@ -21,6 +21,8 @@
     "mongodb": "^4.2.2",
     "mongoose": "^6.1.2",
     "morgan": "^1.10.0",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "razorpay": "^2.8.0",
+    "shortid": "^2.2.16"
   }
 }

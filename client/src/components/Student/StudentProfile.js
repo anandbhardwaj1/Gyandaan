@@ -37,7 +37,7 @@ import "./Student.css"
                             <img src="https://media.istockphoto.com/vectors/user-avatar-icon-sign-symbol-vector-id538748141?k=20&m=538748141&s=612x612&w=0&h=INss7HfK8ygPGlqelxxyqQjVUCJz16RehSYHYTCDX1g=" className="rounded-circle" width="150" />
                             <div className="mt-3">
                                 <h3>{user.name}</h3>
-                                    <a href="/">Home</a>
+                                    <a href="/Home">Home</a>
                                     <div>
                                    <a href="/Courses">Choose your mentor</a>
                                    </div>
