@@ -8,6 +8,7 @@ import {  Routes, Route,useLocation } from "react-router-dom";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import CourseList from "./components/CourseList/CourseList";
 import StudentProfile from "./components/Student/StudentProfile";
+import RazorPay from "./Razorpay/razorpay";
 import MentorProfile from "./components/Mentor/MentorProfile";
 import {useUserContext} from "./context/userContext"
 import Messenger from "./pages/messenger/Messenger";
@@ -70,7 +71,7 @@ const path=p[1]?p[1]:"";
     <div className={outer}>
     <div className={val}>
     <Routes>
-              <Route exact path='/' element={<StudentLogin/>} />
+              <Route exact path='/Home' element={<RazorPay/>} />
                 <Route  path='/StudentLogin' element={<StudentLogin/>} />
     
                 <Route path="/StudentSignup" element={<StudentSignup/>} />
