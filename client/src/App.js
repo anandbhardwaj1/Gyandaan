@@ -4,19 +4,23 @@ import StudentSignup from "./components/Student/StudentSignup";
 import MentorSignup from "./components/Mentor/MentorSignup";
 import StudentLogin from "./components/Student/StudentLogin";
 import MentorLogin from "./components/Mentor/MentorLogin";
-import {  Routes, Route,useLocation, useParams } from "react-router-dom";
+import {  Routes, Route,useLocation } from "react-router-dom";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import CourseList from "./components/CourseList/CourseList";
 import StudentProfile from "./components/Student/StudentProfile";
 import MentorProfile from "./components/Mentor/MentorProfile";
 import {useUserContext} from "./context/userContext"
 import Messenger from "./pages/messenger/Messenger";
+import {io} from "socket.io-client";
 function App() {
-  const { loading } = useUserContext();
+  const { loading,socket,setSocket,user } = useUserContext();
   const location = useLocation();
   const [val,setval]=useState("inner");
   const [outer,setOuter]=useState("outer");
- 
+  const [data,setData]=useState(null);
+ var p=location.pathname.split("/");
+const path=p[1]?p[1]:"";
+
   useEffect(()=>
   { 
    if(location.pathname==="/studentLogin"||location.pathname==="studentSignup")
@@ -42,13 +46,27 @@ function App() {
     
 
   },[location.pathname]);
+ 
+  useEffect(() => {
+    if(user.name)
+    setSocket(io("ws://localhost:8900"));
+  }, [user.name])
 
+  useEffect(() => {
+    if(socket)
+    {
+      socket.emit("addUser", user._id);
+      socket.on("getUsers",(data)=>{
+       setData(data);
+      });
+    }
+  }, [socket,user._id])
   if(loading)
  return (<>Please wait...</>)
  
    return(
     <>
-    <Navbar/>
+    <Navbar pathname={path}/>
     <div className={outer}>
     <div className={val}>
     <Routes>
@@ -63,7 +81,7 @@ function App() {
                <Route path="/profile/:id" element={<MentorProfile/>}/>
               <Route path="/Studentprofile" element={<StudentProfile />} />
               <Route path="/Courses" element={<CourseList/>} />
-              <Route path="/messenger/:id" element={<Messenger/>}/>
+              <Route path="/messenger/:id" element={<Messenger onlineUsers={data}/>}/>
      
      </Routes>
     </div>

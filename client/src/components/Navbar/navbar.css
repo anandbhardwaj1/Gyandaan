@@ -75,7 +75,7 @@ h1,h2,h3,h4,h5,h6{
 .btn-primary:active:focus {
     background-color: rgb(0, 196, 204);
     border-color: rgb(0, 196, 204);
-    color: white;
+    color: rgb(165, 162, 162);
 }
 .btn-outline{
     border-color: rgb(0, 196, 204);
@@ -119,26 +119,6 @@ hr{
 .card-deck a{
   padding-bottom: 10px;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -192,7 +172,7 @@ hr{
   }
   
   .circle-icon {
-    background: white;
+    background: rgb(173, 167, 167);
     padding:50px;
     border-radius: 50%;
     color:#1eaaf1;
@@ -203,5 +183,83 @@ hr{
     bottom: 110px;
     z-index: 1;
   }
+  
+  .navbar {
+  size: auto;
+    padding-right: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    color: rgb(19, 17, 17);
+    position: relative;
+  }
+  
+  .logo {
+       color: #697575;
+     
+    font-weight: bold;
+    font-size: 20px;
+  }
+  
+  .icons {
+    display: flex;
+    align-items: center;
+  }
+  
+  .icon {
+    margin-left: 20px;
+    right :20px;
+    cursor: pointer;
+    position: relative;
+  }
+  
+  .iconImg {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .counter {
+    width: 5px;
+    height: 5px;
+    background-color: rgb(243, 169, 169);
+    border-radius: 50%;
+    padding: 5px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+  }
+  
+  .notifications {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background-color: rgb(189, 184, 184);
+    color: black;
+    font-weight: 300;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+  }
+  
+  .notification {
+    padding: 5px;
+    font-size: 10px;
+  }
+  
+  .nButton {
+    width: 100%;
+    padding: 5px;
+    margin-top: 10px;
+  }
+  nav.navbar.smart-scroll.navbar-custom.navbar-expand-md.navbar-light {
+    background: rgb(145, 208, 233);
+    height: 45px;
+    margin-bottom: 0px;
+}
+  
   
   

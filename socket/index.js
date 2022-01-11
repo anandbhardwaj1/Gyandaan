@@ -40,6 +40,14 @@ io.on("connection", (socket) => {
       text,
     });
   });
+  //send notification
+  socket.on("sendNotification", ({ senderName, receiverId, type }) => {
+    const receiver = getUser(receiverId);
+    io.to(receiver.socketId).emit("getNotification", {
+      senderName,
+      type,
+    });
+  });
 
   //when disconnect
   socket.on("disconnect", () => {
