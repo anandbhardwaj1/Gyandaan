@@ -20,10 +20,11 @@ router.post("/conversation", async (req, res) => {
 
 router.get("/conversations/:userId", async (req, res) => {
   try {
-    console.log("c");
+   
     const conversation = await Conversation.find({
       members: { $in: [req.params.userId] },
-    });
+    },null,{ sort :{ createdAt : -1}});
+   
     res.status(200).json(conversation);
   } catch (err) {
     res.status(500).json(err);

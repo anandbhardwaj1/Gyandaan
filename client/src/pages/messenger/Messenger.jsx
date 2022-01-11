@@ -4,45 +4,34 @@ import { useEffect, useRef, useState} from "react";
 import { useParams } from "react-router";
 import { useUserContext } from '../../context/userContext';
 import axios from "axios";
-import { io } from "socket.io-client";
+
 import Conversation from "../../components/conversations/Conversation"
 
-
-export default function Messenger() {
-
-  const [conversations,setConversations]=useState([])
-  const {user}=useUserContext();
+export default function Messenger({onlineUsers}) {
+  const [conversations,setConversations]=useState([]) //to store all conversations of user
+  const {user,socket}=useUserContext();    
   const { id } = useParams();
-  const [friend_id,setFriend_id]=useState("");
-  const [currentChat, setCurrentChat] = useState(null);
-  const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState("");
-  const [arrivalMessage, setArrivalMessage] = useState(null);
-  const [receiver,setReceiver]=useState("");
-  const [flag,setFlag]=useState(false);
-  const [receiver2,setReceiver2]=useState("");
-  const [search,setSearch]=useState("");
-  const [filterData,setfilterData]=useState([]);
-  const [mapFriend,setMapFriend]=useState([]);
-  const socket = useRef();
-  const [f_id,setF_id]=useState("");
+  const [currentChat, setCurrentChat] = useState(null); //storing  conversation details of current friend/mentor
+  const [messages, setMessages] = useState([]);  
+  const [newMessage, setNewMessage] = useState("");//current message 
+  const [arrivalMessage, setArrivalMessage] = useState(null);//realtime message  sent by socket io 
+  const [receiver,setReceiver]=useState("");   //initial receiver
+  const [flag,setFlag]=useState(false);  //check receiver is online or not
+  const [receiver2,setReceiver2]=useState(""); // current receiver 
+  const [search,setSearch]=useState("");  //keyword to search for particular user
+  const [filterData,setfilterData]=useState([]);//filtered  user on the basis of keyword
+  const [mapFriend,setMapFriend]=useState([]);  //all messaging contacts of current user 
 
-  const scrollRef = useRef();
-  
+  const [f_id,setF_id]=useState("");  //friend id 
+  const scrollRef = useRef(); 
   const inputRef = useRef();
- 
- 
-
-
-  const handleChange =async()=>
+ const handleChange =async()=>      //function to set keyword for filtering
 {
    setSearch(inputRef.current.value);
-  
-}
-const searchFilter=()=>{
-  
+ }
+
+  const searchFilter=()=>{          // filter the receivers
   if (search !== "") {
-   
     const newList = mapFriend.filter((contact) => {
       return contact.data.toLowerCase().includes(search.toLowerCase());
     });
@@ -60,19 +49,7 @@ const searchFilter=()=>{
 
 }
 
-const getFriendId=(conversation_id)=>{
-    try{
-     const conversation= axios.get("http://localhost:8800/conv/"+conversation_id);
-     return conversation.data;
-    }
-    catch(err)
-    {
-      console.log(err);
-    }
-}
-
-const getUser = async (friendId,ConversationId) => {
-  
+const getUser = async (friendId,ConversationId) => {      //storing all the receivers of  current user 
   try { 
     const res = await axios("http://localhost:8800/students/" + friendId);
     const data=res.data;
@@ -86,8 +63,6 @@ const getUser = async (friendId,ConversationId) => {
 
 useEffect(()=>{
   const fun =async()=> {
-    
-  
   try{
     const conversation= await axios.get("http://localhost:8800/conv/"+currentChat);
       setF_id(conversation.data);
@@ -100,10 +75,9 @@ useEffect(()=>{
   fun();
 },[currentChat])
 
-  useEffect(() => {
-    socket.current = io("ws://localhost:8900");
-   
-    socket.current.on("getMessage", (data) => {
+  useEffect(() => {                              //connection with socket and getting realtime messages
+   // socket.current = io("ws://localhost:8900");
+    socket.on("getMessage", (data) => {
       setArrivalMessage({
         sender: data.senderId,
         text: (data.text),
@@ -112,41 +86,34 @@ useEffect(()=>{
     });
   }, []);
 
-  useEffect(() => {
+  useEffect(() => {                            //updating the realtime messages if sender is same as currentchat
     if(currentChat?.members)
-   { arrivalMessage &&
+   { arrivalMessage &&flag&&
       currentChat?.members.includes(arrivalMessage.sender) &&
       setMessages((prev) => [...prev, arrivalMessage]);}
       else
       {
-        arrivalMessage &&
+        arrivalMessage &&flag&&
         f_id?.members.includes(arrivalMessage.sender) &&
         setMessages((prev) => [...prev, arrivalMessage]);
       }
   }, [arrivalMessage, currentChat]);
 
-  useEffect( () => {
-   
-    const ID=f_id?.members?.find((m)=>m!==user._id);
-    console.log(ID);
-
-    socket.current.emit("addUser", user._id);
-    socket.current.on("getUsers",(data)=>{
-      
-     
-      
-      const k=data.find((user) => user.userId === (ID?ID:id));
+  useEffect( () => {                                  //sending and storing current user data to socket 
+     const ID=f_id?.members?.find((m)=>m!==user._id);  //and checking the current receiver is online or not
+   // socket.current.emit("addUser", user._id);
+  
     
-      if(!k)
+    const k=onlineUsers?.find((user) => user.userId === (ID?ID:id));
+    if(!k)
       setFlag(false);
       else
       setFlag(true);
-    })
-  }, [currentChat,f_id]);
+ 
+  }, [currentChat,f_id,onlineUsers]);
 
   useEffect(() => {
-    
-    const getConversations = async () => {
+   const getConversations = async () => {
       try {
         const res = await axios.get("http://localhost:8800/conversations/" + user._id);
         setConversations(res.data);
@@ -159,11 +126,10 @@ useEffect(()=>{
 
   }, [user._id]);
  
-  useEffect(() => {
+  useEffect(() => {                          //setting initial currentchat based on url ID
     const getCurrentChat = async () => {
       try { 
         const res = await axios.get(
-
           `http://localhost:8800/conversations/find/${id}/${user._id}`
         );
         setCurrentChat(res.data);
@@ -175,31 +141,27 @@ useEffect(()=>{
   }, []);
 
   useEffect(() => {
-    
-    const getMessages = async () => {
+   const getMessages = async () => {
       if(!receiver2)
       try { 
-       
         const res = await axios.get("http://localhost:8800/messages/" + currentChat?._id);
         setMessages(res.data);
       } catch (err) {
         console.log(err);
       }
       else
-      {
-        try {
+      { try {
           const res = await axios.get("http://localhost:8800/messages/" + currentChat);
           setMessages(res.data);
         } catch (err) {
           console.log(err);
         }
       }
-     
     };
     getMessages();
   }, [currentChat]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {         //sending the message & notification to database and to socket  
     e.preventDefault();
     const message = {
       sender: user._id,
@@ -208,11 +170,19 @@ useEffect(()=>{
     };
     const ID=f_id?.members?.find((m)=>m!==user._id);
     if(flag)
-    socket.current.emit("sendMessage", {
+   {
+     socket.emit("sendMessage", {
       senderId: user._id,
       receiverId: ID?ID:id,
       text: (newMessage),
     });
+    
+      socket.emit("sendNotification", {
+        senderName: user.name,
+        receiverId: ID?ID:id,
+        type: 1,
+      });
+    }
     try {
      
       const res = await axios.post("http://localhost:8800/messages", message);
@@ -227,7 +197,7 @@ useEffect(()=>{
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  useEffect(()=>{
+  useEffect(()=>{                   //setting initial receiver
   if(!receiver2)
   {
    
@@ -249,15 +219,13 @@ useEffect(()=>{
   
   useEffect(()=>{
     for(let i=0;i<conversations.length;i++)
-    { //console.log("h");
+    {
       let friendId=conversations[i].members.find((m) => m !== user._id);
-      
       getUser(friendId,conversations[i]._id);
 
     }
 
   },[conversations])
-
 
 if(messages.length!==0)
   return (
@@ -280,13 +248,11 @@ if(messages.length!==0)
               <Conversation conversation={c} currentUser={user} />
             </div>
           ))
-
           }
       </div>
     </div>
    
     <div className="chatBox">
-   
       <div className="chatBoxWrapper">
         {currentChat ? (
           <>
@@ -316,7 +282,6 @@ if(messages.length!==0)
           <>
           Open a conversation to start a chat.
           </>
-          
           </span>
         )}
       </div>
@@ -344,7 +309,6 @@ if(messages.length!==0)
               <Conversation conversation={c} currentUser={user} />
             </div>
           ))
-
           }
         </div>
       </div>
@@ -353,7 +317,6 @@ if(messages.length!==0)
           {currentChat ? (
             <>
               <div className="chatBoxTop">
-               
               <span className="noConversationText">
              Start a conversation with {receiver2}.
             </span>
@@ -380,7 +343,6 @@ if(messages.length!==0)
       
     </div>
   </>
-  
     );
   }
 }

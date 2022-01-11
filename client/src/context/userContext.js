@@ -1,4 +1,5 @@
 import React,{useState,createContext,useContext,useEffect} from "react"
+
 export const userContext = createContext({
     user: null,
     loading:null,
@@ -12,6 +13,7 @@ export const userContext = createContext({
 
 
     const [user, setUser] = useState(USER);
+    const [socket,setSocket]=useState(null);
     const [loading,setloading]=useState(Loading);
 
    
@@ -55,14 +57,14 @@ export const userContext = createContext({
   },[loading]);
    
     return (
-      <userContext.Provider value={{ user,setUser,loading,logOut,setloading }}>
+      <userContext.Provider value={{ user,setUser,loading,logOut,setloading,socket,setSocket }}>
         {children}
       </userContext.Provider>
     );
   }
   
   export function useUserContext() {
-    const { user, setUser,loading ,setloading,logOut} = useContext(userContext);
+    const { user, setUser,loading ,setloading,logOut,socket,setSocket} = useContext(userContext);
   
-    return { user,setUser,loading,setloading,logOut};
+    return { user,setUser,loading,setloading,logOut,socket,setSocket};
   }
