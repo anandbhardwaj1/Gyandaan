@@ -69,6 +69,12 @@
     max-width: 100%;
     padding: 5px ;
   }
+  .custom-btn2 {
+    background-color: #94d0e7;
+    max-width: 100%;
+    padding: 5px ;
+    margin: auto;
+  }
 
   .custom-control-label {
     font-weight: 400;

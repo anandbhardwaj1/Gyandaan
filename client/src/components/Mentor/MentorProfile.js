@@ -19,6 +19,11 @@ import "./Student.css"
       console.log(res);
       navigate(`/messenger/${id}`);
   }
+  const videoCall=async()=>
+  {
+     
+      navigate(`/video/${id}`);
+  }
   useEffect(()=>
   {
       if(!loading&&!user.name)
@@ -57,6 +62,11 @@ import "./Student.css"
                                    <div>
                                    
                                    <button type="button" class="btn btn-info" onClick={postId}>Start a Chat</button>
+                                   
+                                   </div>
+                                   <div>
+                                   
+                                   <button type="button" style={{color:"darkgreen"}}  class="custom-button2" onClick={videoCall}>Start a VideoCall</button>
                                    
                                    </div>
                                    

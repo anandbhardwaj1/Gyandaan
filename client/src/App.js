@@ -4,7 +4,7 @@ import StudentSignup from "./components/Student/StudentSignup";
 import MentorSignup from "./components/Mentor/MentorSignup";
 import StudentLogin from "./components/Student/StudentLogin";
 import MentorLogin from "./components/Mentor/MentorLogin";
-import {  Routes, Route,useLocation } from "react-router-dom";
+import {  Routes, Route,useLocation, Navigate } from "react-router-dom";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import CourseList from "./components/CourseList/CourseList";
 import StudentProfile from "./components/Student/StudentProfile";
@@ -12,6 +12,7 @@ import RazorPay from "./Razorpay/razorpay";
 import MentorProfile from "./components/Mentor/MentorProfile";
 import {useUserContext} from "./context/userContext"
 import Messenger from "./pages/messenger/Messenger";
+import VideoApp from "./components/VideoChat/videoApp";
 import {io} from "socket.io-client";
 function App() {
   const { loading,socket,setSocket,user } = useUserContext();
@@ -71,7 +72,8 @@ const path=p[1]?p[1]:"";
     <div className={outer}>
     <div className={val}>
     <Routes>
-              <Route exact path='/Home' element={<RazorPay/>} />
+              <Route  path='/' element={<StudentProfile/>} /> 
+              <Route  path='/Home' element={<RazorPay/>} />
                 <Route  path='/StudentLogin' element={<StudentLogin/>} />
     
                 <Route path="/StudentSignup" element={<StudentSignup/>} />
@@ -81,9 +83,10 @@ const path=p[1]?p[1]:"";
                 <Route path ="/MentorSignup" element={<MentorSignup/>}/>
                <Route path="/profile/:id" element={<MentorProfile/>}/>
               <Route path="/Studentprofile" element={<StudentProfile />} />
-              <Route path="/Courses" element={<CourseList/>} />
+              <Route path="/CourseMentors" element={<CourseList/>} />
               <Route path="/messenger/:id" element={<Messenger onlineUsers={data}/>}/>
-     
+            {user.name&&  <Route path="/video/:id" element={<VideoApp onlineUsers={data}/>} />}
+            
      </Routes>
     </div>
     </div>

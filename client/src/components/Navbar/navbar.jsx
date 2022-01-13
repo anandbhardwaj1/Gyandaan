@@ -8,7 +8,7 @@ import { useUserContext } from '../../context/userContext'
    const navigate=useNavigate();
     const [notifications, setNotifications] = useState([]);
     const [open, setOpen] = useState(false);
-    const {user,socket}=useUserContext();
+    const {user,socket,logOut}=useUserContext();
   //  console.log(pathname);
     const displayNotification = ({ senderName, type }) => {
       let action="sent a new message";
@@ -16,7 +16,7 @@ import { useUserContext } from '../../context/userContext'
         <span className="notification">{`${senderName} ${action}.`}</span>
       );
     };
-  
+ 
     const handleRead = () => {
       setNotifications([]);
       setOpen(false);
@@ -38,6 +38,21 @@ import { useUserContext } from '../../context/userContext'
         
   
             <div className="collapse  navbar-collapse" id="navbarToggleExternalContent">
+            {user.name&&
+                <ul className="navbar-nav  ml-auto"> 
+                    <li className="nav-item">
+                        <a className="nav-link" href="/Home">Home</a>
+                    </li>
+                    <li className="nav-item">
+                        <a className="nav-link" href="/StudentProfile">Profile</a>
+                    </li>
+                   
+                    <li className="nav-item">
+                        <a className="logout" href="/studentLogin" onClick={logOut}>Sign out</a>
+                    </li>
+                   
+                </ul>
+            }
              {!user.name?
                 <ul className="navbar-nav  ml-auto">
                     <li className="nav-item">
