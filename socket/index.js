@@ -21,7 +21,8 @@ const getUser = (userId) => {
 };
 
 io.on("connection", (socket) => {
-  //when ceonnect
+  //when connect
+  socket.emit("me", socket.id);
   console.log("a user connected.");
 
   //take userId and socketId from user
@@ -49,8 +50,27 @@ io.on("connection", (socket) => {
     });
   });
 
+  //call a user 
+  socket.on("callUser", ({ userToCall, signalData, from, name }) => {
+
+		io.to(userToCall).emit("callUser", { signal: signalData, from, name });
+	});
+  //
+  socket.on("updateMyMedia", ({ type, currentMediaStatus }) => {
+    socket.broadcast.emit("updateUserMedia", { type, currentMediaStatus });
+  });
+
+	socket.on("answerCall", (data) => {
+		io.to(data.to).emit("callAccepted", data.signal)
+	});
+
+  //
+  socket.on("endCall", ({ id }) => {
+    io.to(id).emit("endCall");
+  });
   //when disconnect
   socket.on("disconnect", () => {
+    socket.broadcast.emit("callEnded")
     console.log("a user disconnected!");
     removeUser(socket.id);
     io.emit("getUsers", users);

@@ -10,7 +10,7 @@ export default function Cards({posts}) {
         <div className="container-fluid">
             <div className="row">
                 <div className="col-md-10">
-                    <h1>Scholastic Courses</h1>
+                    <h1>Mentors</h1>
                     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
                 </div>
             </div>
