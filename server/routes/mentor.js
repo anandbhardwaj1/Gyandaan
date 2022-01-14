@@ -35,7 +35,7 @@ router.post("/addMentor",async (req,res)=>{
           
         }
         catch(err)
-        { console.log("k1");
+        { 
         console.log(err);
            res.status(404).json(err);
         }

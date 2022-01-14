@@ -8,29 +8,29 @@ import axios from "axios";
 import Conversation from "../../components/conversations/Conversation"
 
 export default function Messenger({onlineUsers}) {
-  const [conversations,setConversations]=useState([]) //to store all conversations of user
+  const [conversations,setConversations]=useState([]) 
   const {user,socket}=useUserContext();    
   const { id } = useParams();
-  const [currentChat, setCurrentChat] = useState(null); //storing  conversation details of current friend/mentor
+  const [currentChat, setCurrentChat] = useState(null); 
   const [messages, setMessages] = useState([]);  
-  const [newMessage, setNewMessage] = useState("");//current message 
-  const [arrivalMessage, setArrivalMessage] = useState(null);//realtime message  sent by socket io 
-  const [receiver,setReceiver]=useState("");   //initial receiver
-  const [flag,setFlag]=useState(false);  //check receiver is online or not
-  const [receiver2,setReceiver2]=useState(""); // current receiver 
-  const [search,setSearch]=useState("");  //keyword to search for particular user
-  const [filterData,setfilterData]=useState([]);//filtered  user on the basis of keyword
-  const [mapFriend,setMapFriend]=useState([]);  //all messaging contacts of current user 
+  const [newMessage, setNewMessage] = useState("");
+  const [arrivalMessage, setArrivalMessage] = useState(null);
+  const [receiver,setReceiver]=useState("");   
+  const [flag,setFlag]=useState(false);  
+  const [receiver2,setReceiver2]=useState("");
+  const [search,setSearch]=useState(""); 
+  const [filterData,setfilterData]=useState([]);
+  const [mapFriend,setMapFriend]=useState([]);  
 
-  const [f_id,setF_id]=useState("");  //friend id 
+  const [f_id,setF_id]=useState("");  
   const scrollRef = useRef(); 
   const inputRef = useRef();
- const handleChange =async()=>      //function to set keyword for filtering
+ const handleChange =async()=>      
 {
    setSearch(inputRef.current.value);
  }
 
-  const searchFilter=()=>{          // filter the receivers
+  const searchFilter=()=>{         
   if (search !== "") {
     const newList = mapFriend.filter((contact) => {
       return contact.data.toLowerCase().includes(search.toLowerCase());
@@ -49,7 +49,7 @@ export default function Messenger({onlineUsers}) {
 
 }
 
-const getUser = async (friendId,ConversationId) => {      //storing all the receivers of  current user 
+const getUser = async (friendId,ConversationId) => {     
   try { 
     const res = await axios("http://localhost:8800/students/" + friendId);
     const data=res.data;
@@ -75,7 +75,7 @@ useEffect(()=>{
   fun();
 },[currentChat])
 
-  useEffect(() => {                              //connection with socket and getting realtime messages
+  useEffect(() => {                             
    // socket.current = io("ws://localhost:8900");
     socket.on("getMessage", (data) => {
       setArrivalMessage({
@@ -86,7 +86,7 @@ useEffect(()=>{
     });
   }, []);
 
-  useEffect(() => {                            //updating the realtime messages if sender is same as currentchat
+  useEffect(() => {                  
     if(currentChat?.members)
    { arrivalMessage &&flag&&
       currentChat?.members.includes(arrivalMessage.sender) &&
@@ -99,11 +99,9 @@ useEffect(()=>{
       }
   }, [arrivalMessage, currentChat]);
 
-  useEffect( () => {                                  //sending and storing current user data to socket 
-     const ID=f_id?.members?.find((m)=>m!==user._id);  //and checking the current receiver is online or not
-   // socket.current.emit("addUser", user._id);
-  
-    
+  useEffect( () => {                                  
+     const ID=f_id?.members?.find((m)=>m!==user._id);  
+     socket.current.emit("addUser", user._id);
     const k=onlineUsers?.find((user) => user.userId === (ID?ID:id));
     if(!k)
       setFlag(false);
@@ -126,7 +124,7 @@ useEffect(()=>{
 
   }, [user._id]);
  
-  useEffect(() => {                          //setting initial currentchat based on url ID
+  useEffect(() => {                     
     const getCurrentChat = async () => {
       try { 
         const res = await axios.get(
@@ -161,7 +159,7 @@ useEffect(()=>{
     getMessages();
   }, [currentChat]);
 
-  const handleSubmit = async (e) => {         //sending the message & notification to database and to socket  
+  const handleSubmit = async (e) => {          
     e.preventDefault();
     const message = {
       sender: user._id,

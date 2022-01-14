@@ -15,7 +15,7 @@ const razorpay = new Razorpay({
 
 router.post('/verification', async (req, res) => {
 	// do a validation
-    console.log("here");
+   
 	const secret = '12345678'
 
 	console.log(req.body)

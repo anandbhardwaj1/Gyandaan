@@ -21,11 +21,10 @@ const getUser = (userId) => {
 };
 
 io.on("connection", (socket) => {
-  //when connect
+  
   socket.emit("me", socket.id);
   console.log("a user connected.");
 
-  //take userId and socketId from user
   socket.on("addUser", (userId) => {
    
     addUser(userId, socket.id);
