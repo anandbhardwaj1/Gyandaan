@@ -5,7 +5,7 @@ import { Assignment, Phone, PhoneDisabled } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 import { useUserContext } from '../../../context/userContext';
 import { SocketContext } from '../context';
-import { useParams } from 'react-router-dom';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
