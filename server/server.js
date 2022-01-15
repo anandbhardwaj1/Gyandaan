@@ -8,9 +8,8 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require('body-parser')
 const studentRoute=require("./routes/student");
 const bcrypt=require("bcrypt");
-const URL="mongodb+srv://Anand:12345678A@cluster0.zgvw0.mongodb.net/Authentication?retryWrites=true&w=majority"
 dotenv.config();
-
+const URL=process.env.URL;
 var cors = require('cors')
 const corsConfig = {
     credentials: true,
