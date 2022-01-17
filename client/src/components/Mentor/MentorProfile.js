@@ -1,7 +1,7 @@
 import React,{useEffect, useState} from 'react'
 import {useNavigate,useParams,Link} from "react-router-dom";
 import { useUserContext } from '../../context/userContext';
-import {Button} from "react-bootstrap"
+import { toast } from 'react-toastify';
 import axios from "axios";
 import "./Student.css"
 
@@ -9,15 +9,21 @@ import "./Student.css"
      const navigate=useNavigate();
      const [mentor, setMentor] = useState({});
      const { id } = useParams();
+     const [isMentor,setIsMentor]=useState(false);
    
   const user1={username:"Anand",email:"abc@",firstname:"Abc",surname:"xyz",topics:["C++","HTML","c","d","e","f"]}
    const {user,loading,setloading}=useUserContext();
+   
 
   const postId=async()=>
   {
-      const res=await axios.post("http://localhost:8800/conversation",{senderId:user._id,receiverId:id});
-      console.log(res);
-      navigate(`/messenger/${id}`);
+       axios.post("http://localhost:8800/conversation",{senderId:user._id,receiverId:id});
+       toast.dark("Mentor Enrolled Successfully 👍");
+       setIsMentor(true);
+    
+  }
+  const visitChat=()=>{
+    navigate(`/messenger/${id}`);
   }
   const videoCall=async()=>
   {
@@ -42,6 +48,24 @@ import "./Student.css"
     getMentor();
   
   },[user,id])
+
+  useEffect(()=>{
+    const getCurrentChat = async () => {
+        try { 
+          const res = await axios.get(
+            `http://localhost:8800/conversations/find/${id}/${user._id}`
+          );
+          if(res.data)
+          {
+              setIsMentor(true);
+          }
+         
+        } catch (err) {
+          console.log(err);
+        }
+      };
+      getCurrentChat();
+  })
   
  
     return (
@@ -59,16 +83,26 @@ import "./Student.css"
                                     <div>
                                    <a href="/Courses">Courses</a>
                                    </div>
+                                  {!isMentor&& <div>
+                                   
+                                   <button type="button" className="btn btn-info" onClick={postId}>Choose  as a mentor</button>
+                                   
+                                   </div>}
+                                   {isMentor&&
                                    <div>
                                    
-                                   <button type="button" class="btn btn-info" onClick={postId}>Start a Chat</button>
+                                   <button type="button" className="btn btn-info" onClick={visitChat}>Start a Chat</button>
                                    
                                    </div>
+                                   }
+                                   {isMentor&&
                                    <div>
                                    
                                    <button type="button" style={{color:"darkgreen"}}  class="custom-button2" onClick={videoCall}>Start a VideoCall</button>
                                    
                                    </div>
+                                   }
+                                   
                                    
                             </div>
                         </div>

@@ -1,8 +1,7 @@
 import {useRef} from "react";
 import RazorPay from "../../Api/Razorpay/Razorpay/Razorpay/razorpay";
 import Youtube from "../../Api/Razorpay/Razorpay/Youtube/main"
-
-
+import Mentors from "../Cards/Mentors";
 
 function HomePage(){
     const inputRef=useRef();
@@ -15,9 +14,14 @@ function HomePage(){
      <div>
          <Youtube/>
      </div>
+     <div>
+     <Mentors/>
+     </div>
      <div ref={inputRef}>
          <RazorPay/>
      </div>
+     
+    
      </>
    
  )

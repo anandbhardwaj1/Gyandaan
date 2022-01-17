@@ -36,11 +36,10 @@ function Youtube(){
    
     return (
         <>
-        <div>
-        <h2 style={{ color: 'black', fontSize: '35px' ,marginTop:"20px"}}>Recommended Youtube Videos</h2>
-        </div>  
+         
         <div className='ui container' style={{ marginTop: '2em' }}>
-           
+        <h2 style={{ color: 'black', fontSize: '35px' ,marginTop:"40px"}}>Recommended Youtube Videos</h2>
+        
             <div className='ui grid'>
                 <div className="ui row">
                     <div className="eleven wide column">

@@ -2,15 +2,11 @@ import React from 'react'
 import Cards from '../Cards/Card';
 import { useEffect, useState } from "react";
 import { useUserContext } from '../../context/userContext';
-import { useLocation,useNavigate } from "react-router";
-
-
-
-
+import { useNavigate } from "react-router";
+import {toast} from "react-toastify";
 export default function CourseList() {
     const {user,setloading}=useUserContext();
 
-    
     const topics=user.topics;
     
     const [posts, setPosts] = useState([]);
@@ -18,24 +14,19 @@ export default function CourseList() {
     let flag={};
         const  navigate=useNavigate();
    
-
-   
-   
     useEffect(() => {
    
       const fetchPosts = async () => {
-        console.log("here");
+        
         if(!user.name)
        { setloading(true);
          navigate("/StudentLogin");
       }
       
-    
-  
+     
     else
     { 
        for(let i=0;i<topics.length;i++){
-       console.log(topics[i]);
       fetch('http://localhost:8800/mentors',{
         method: 'POST',
         body: JSON.stringify({topic:topics[i]}),
@@ -58,20 +49,16 @@ export default function CourseList() {
     }
   }
 }
-       
-    
-
-    
-
-
+     
       fetchPosts();
     
 
     }, []);
+    useEffect(()=>{
+      toast.dark("These Mentors are related to your current requirement",{closeOnClick: true,
+        pauseOnHover: true,});
+    },[])
   
-    
-   
-    console.log(posts);
     return (
         <div>
        <Cards posts={posts}/>

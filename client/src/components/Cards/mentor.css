@@ -113,14 +113,13 @@ hr{
 .card-deck h4{
   font-weight: bold;
 }
-.card-img-top{
+.card-img-top1{
   padding: 7px 7px 0px;
   z-index: 100;
-  width: 500px !important;
+  width: 250px;
   border: none !important;
   outline: none !important;
 }
-
 .card-deck a{
   padding-bottom: 10px;
   border: none !important;

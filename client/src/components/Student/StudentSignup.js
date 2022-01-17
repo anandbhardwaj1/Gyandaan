@@ -1,6 +1,9 @@
 import React,{useState,useEffect} from "react";
 import {useNavigate} from "react-router-dom";
 import "./Student.css"
+import {  toast } from "react-toastify";
+
+
 
 function StudentSignup ()
     {
@@ -26,8 +29,8 @@ function StudentSignup ()
     })
     .then((res) => {
       if(res.ok)
-      {
-          navigate('/StudentLogin');
+      {   toast.dark("Success👍,Login to continue!");
+          navigate('/studentLogin');
       }
       else
       { 
@@ -98,6 +101,10 @@ function StudentSignup ()
         errors.age = "Age must be valid!";
         setError(errors.age)
     }
+    else if(values.phone.length!==10) {
+      errors.phone = "phone must be valid!";
+      setError(errors.phone)
+  }
       return errors;
     };
   
@@ -146,7 +153,7 @@ function StudentSignup ()
 
                 <button type="submit" onClick={handleSubmit} className="btn btn-dark btn-lg btn-block">Register</button>
                 <p className="forgot-password text-right">
-                    Already registered? <a href="/StudentLogin">log in</a>
+                    Already registered? <a href="/studentLogin">log in</a>
                 </p>
             </form>
         );

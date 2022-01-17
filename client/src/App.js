@@ -1,4 +1,4 @@
-import React,{useEffect,useState} from "react"
+import React,{useEffect,useState,useRef} from "react"
 import Navbar from "./components/Navbar/navbar";
 import StudentSignup from "./components/Student/StudentSignup";
 import MentorSignup from "./components/Mentor/MentorSignup";
@@ -14,6 +14,12 @@ import {useUserContext} from "./context/userContext"
 import Messenger from "./pages/messenger/Messenger";
 import VideoApp from "./components/VideoChat/videoApp";
 import {io} from "socket.io-client";
+import { ToastContainer } from "react-toastify";
+import { injectStyle } from "react-toastify/dist/inject-style";
+
+if (typeof window !== "undefined") {
+  injectStyle();
+}
 
 function App() {
   const { loading,socket,setSocket,user } = useUserContext();
@@ -21,34 +27,26 @@ function App() {
   const [val,setval]=useState("inner");
   const [outer,setOuter]=useState("outer");
   const [data,setData]=useState(null);
- var p=location.pathname.split("/");
+  var p=location.pathname.split("/");
 const path=p[1]?p[1]:"";
-
+var active=useRef();
   useEffect(()=>
-  { 
-   if(location.pathname==="/studentLogin"||location.pathname==="studentSignup")
-    { setOuter("outer");
-      setval("inner");
-      
+  {  if(location.pathname==="/studentLogin")
+    {  active.current=1;
+       setOuter("outer");setval("inner");
+    } else  if(location.pathname==="/StudentSignup")
+    {  active.current=2;
+       setOuter("outer");setval("inner");
+    }else  if(location.pathname==="/MentorSignup")
+    {  active.current=4;
+       setOuter("outer");setval("inner"); 
+    }else  if(location.pathname==="/MentorLogin")
+    {  active.current=3;
+       setOuter("outer");setval("inner");
+    }else
+    {setOuter(""); setval("");
     }
-    else if(location.pathname==="/StudentProfile")
-    {
-      setOuter("outer");
-      setval("inner1");
-    }
-    else if(location.pathname==="/Courses")
-    { setOuter("");
-      setval("");
-    }
-    else
-    {
-      setOuter("");
-      setval("");
-    }
-   
-    
-
-  },[location.pathname]);
+   },[location.pathname]);
  
   useEffect(() => {
     if(user.name)
@@ -69,7 +67,7 @@ const path=p[1]?p[1]:"";
  
    return(
     <>
-    <Navbar pathname={path}/>
+    <Navbar pathname={path} active={active}/>
     <div className={outer}>
     <div className={val}>
     <Routes>
@@ -91,6 +89,7 @@ const path=p[1]?p[1]:"";
      </Routes>
     </div>
     </div>
+    <ToastContainer/>
     
         </>
    )

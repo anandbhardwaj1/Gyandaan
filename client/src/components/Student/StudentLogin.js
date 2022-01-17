@@ -37,7 +37,7 @@ import {useUserContext} from "../../context/userContext"
    useEffect(()=>{
        
         async function fetchMyAPI() {
-            console.log("ff");
+          
             let response = await  fetch("http://localhost:8800/login", {
                 method: 'POST',
                 body: JSON.stringify(formValues),
@@ -49,9 +49,6 @@ import {useUserContext} from "../../context/userContext"
             })
             if(response.ok)
             { 
-
-               console.log("login");
-              
             await fetchMyAPI2();
               setIsSubmit(false);
               setloading(true);
@@ -67,7 +64,7 @@ import {useUserContext} from "../../context/userContext"
             
           }
            if(isSubmit)
-          { console.log("submit");
+          {
               fetchMyAPI()
           }
 

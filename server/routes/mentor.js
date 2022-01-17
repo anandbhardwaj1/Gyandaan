@@ -20,7 +20,7 @@ router.post("/addMentor",async (req,res)=>{
     });
 
     router.get("/mentor/:id",async(req,res)=>{
-        try{ console.log(req.params.id);
+        try{ 
             Mentor.findById((req.params.id),function(err,data){
             
                 if (err) {

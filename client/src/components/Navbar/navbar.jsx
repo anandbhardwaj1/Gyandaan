@@ -4,12 +4,18 @@ import "./navbar.css"
 import "./aos.css"
 import Notification from  "../../assets/notification.svg"
 import { useUserContext } from '../../context/userContext'
- function Navbar({pathname}) {
+import LogoutSharpIcon from '@mui/icons-material/LogoutSharp';
+
+
+ function Navbar({pathname,active}) {
+
    const navigate=useNavigate();
     const [notifications, setNotifications] = useState([]);
     const [open, setOpen] = useState(false);
     const {user,socket,logOut}=useUserContext();
-  //  console.log(pathname);
+
+    
+
     const displayNotification = ({ senderName, type }) => {
       let action="sent a new message";
       return (
@@ -22,6 +28,7 @@ import { useUserContext } from '../../context/userContext'
       setOpen(false);
       navigate("/messenger/123")
     };
+
   
     useEffect(() => {
     
@@ -29,8 +36,6 @@ import { useUserContext } from '../../context/userContext'
             setNotifications((prev) => [...prev, data]);
           });
     }, [socket])
- 
-    
     return (
         
 
@@ -48,23 +53,23 @@ import { useUserContext } from '../../context/userContext'
                     </li>
                    
                     <li className="nav-item">
-                        <a className="logout" href="/studentLogin" onClick={logOut}>Sign out</a>
+                        <a style={{color:"white", background:"black"}} className="logout" href="/studentLogin" onClick={logOut} title="SignOut">{ <LogoutSharpIcon />}</a>
                     </li>
                    
                 </ul>
             }
              {!user.name?
                 <ul className="navbar-nav  ml-auto">
-                    <li className="nav-item">
+                    <li className={active.current===1?"nav-item active":"nav-item"} >
                         <a className="nav-link" href="/studentLogin">Student Login</a>
                     </li>
-                    <li className="nav-item">
+                    <li className={active.current===2?"nav-item active":"nav-item"} >
                         <a className="nav-link" href="/StudentSignup">Student Signup</a>
                     </li>
-                    <li className="nav-item active">
+                    <li className={active.current===3?"nav-item active":"nav-item"} >
                         <a className="nav-link" href="/MentorLogin">Mentor Login</a>
                     </li>
-                    <li className="nav-item">
+                    <li className={active.current===4?"nav-item active":"nav-item"} >
                         <a className="nav-link" href="/MentorSignup">Mentor Signup</a>
                     </li>
                 </ul>

@@ -12,8 +12,6 @@ import "./Student.css"
      const navigate=useNavigate();
      const user1={username:"Anand",email:"abc@",firstname:"Abc",surname:"xyz",topics:["C++","HTML","c","d","e","f"]}
      const { user,loading,logOut,setloading } = useUserContext();
-    
-
     const  data=[
     {value:1,label:"C++"},
     {value:2,label:"java"},

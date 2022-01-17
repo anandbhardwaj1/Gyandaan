@@ -219,8 +219,8 @@ hr{
   }
   .logout{
     background-color: rgb(242, 243, 243);
-    margin-left: 800px;
-    padding: 7px;
+    margin-left:820px;
+    padding: 10px;
    color:rgb(19, 15, 15);
    font-weight: 200;
    display: flex;
