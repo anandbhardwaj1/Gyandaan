@@ -86,7 +86,7 @@ motivate mentors to improve their performance in
 order to receive better reviews.</li></br>
 <li>
 Recommendation- Youtube api is used to recommend some video lectures to mentees
-according to his requirements.
+according to their requirements.
 </li></br>
 <li>Payment Gateway - A payment gateway where the
 mentees/mentors can donate. It is implemented using Razorpay
